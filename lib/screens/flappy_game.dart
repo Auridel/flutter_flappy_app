@@ -1,10 +1,12 @@
 import 'dart:async';
 
 import 'package:flame/components.dart';
+import 'package:flame/extensions.dart';
 import 'package:flame/game.dart';
 import 'package:flame/gestures.dart';
 import 'package:flutter_flappy_app/bloc/tap_bloc.dart';
 import 'package:flutter_flappy_app/components/bird.dart';
+import 'package:flutter_flappy_app/components/game_score.dart';
 import 'package:flutter_flappy_app/components/pipe_sprite.dart';
 import 'package:flutter_flappy_app/helpers/math_helpers.dart';
 
@@ -16,7 +18,17 @@ class FlappyGame extends BaseGame with TapDetector, HasCollidables {
   final _tapStream = TapBloc.getInstance();
   late final List<Map<EPipePosition, PipeSprite>> _pipes;
   final double _pipeBetweenGapHorizontal = 200.0;
+  final double _birdX = 150.0;
+  late final GameScore _gameScore;
+
   double _speed = 1.0;
+  int _score = 0;
+
+  int get score => _score;
+
+  FlappyGame() {
+    _gameScore = GameScore(this);
+  }
 
   Future<void> onLoad() async {
     bg
@@ -31,15 +43,24 @@ class FlappyGame extends BaseGame with TapDetector, HasCollidables {
       ..position = Vector2(size.x, 0.0);
     add(bg2);
 
-    add(Bird(await loadSprite('bird.png'), size));
-
     await _initPipes(size);
+    add(Bird(await loadSprite('bird.png'), _birdX, size, _onCollide));
+  }
+
+  void _onCollide() {
+    Future.delayed(Duration(seconds: 2), () {
+      super.pauseEngine();
+    });
+  }
+
+  void _addScore() {
+    _score += 1;
   }
 
   Future<void> _initPipes(Vector2 screenSize) async {
     final pipeTopSprite = await loadSprite('fbPipeTop.png');
     final pipeBottomSprite = await loadSprite('fbPipeBottom.png');
-    final int pipesCount = screenSize.x ~/ _pipeBetweenGapHorizontal;
+    final int pipesCount = (screenSize.x / _pipeBetweenGapHorizontal).round();
     final pipesInitY =
         List.generate(pipesCount, (index) => generateRandomPipeY(screenSize.y));
     print(pipesInitY);
@@ -52,7 +73,9 @@ class FlappyGame extends BaseGame with TapDetector, HasCollidables {
             pipesInitY[index],
             (index + 1) * _pipeBetweenGapHorizontal + screenSize.x,
             index,
-            _requestUpdate),
+            _requestUpdate,
+            _birdX,
+            _addScore),
         EPipePosition.Bottom: PipeSprite(
             pipeBottomSprite,
             screenSize,
@@ -60,7 +83,9 @@ class FlappyGame extends BaseGame with TapDetector, HasCollidables {
             pipesInitY[index],
             (index + 1) * _pipeBetweenGapHorizontal + screenSize.x,
             index,
-            _requestUpdate),
+            _requestUpdate,
+            _birdX,
+            _addScore),
       };
     });
     _pipes.forEach((element) {
@@ -95,6 +120,12 @@ class FlappyGame extends BaseGame with TapDetector, HasCollidables {
   }
 
   @override
+  void render(Canvas canvas) {
+    super.render(canvas);
+    _gameScore.render(canvas);
+  }
+
+  @override
   void update(double t) {
     super.update(t);
     bg.position.x -= _speed;
@@ -103,5 +134,6 @@ class FlappyGame extends BaseGame with TapDetector, HasCollidables {
       bg.position.x = 0.0;
       bg2.position.x = size.x;
     }
+    _gameScore.update(t);
   }
 }
