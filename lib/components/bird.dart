@@ -9,26 +9,26 @@ import 'package:flutter_flappy_app/bloc/tap_bloc.dart';
 class Bird extends SpriteComponent with Hitbox, Collidable {
   final _tapBloc = TapBloc.getInstance();
   final Function() _onCollide;
-  final double birdSize = 20.0;
-  final double gravity = 0.1;
-  final double maxVelocityY = 5.0;
-  final Vector2 screenSize;
+  final double _birdSize = 20.0;
+  final double _gravity = 0.1;
+  final double _maxVelocityY = 5.0;
+  final Vector2 _screenSize;
   late final StreamSubscription<void> _subscription;
   bool _collision = false;
   bool _hasEffect = false;
-  double velocityY = 0;
+  double _velocityY = 0;
 
-  Bird(Sprite sprite, double birdX, this.screenSize, this._onCollide) {
+  Bird(Sprite sprite, double birdX, this._screenSize, this._onCollide) {
     this.sprite = sprite;
-    size = Vector2(birdSize, birdSize);
-    position = Vector2(birdX, screenSize.y / 2);
+    size = Vector2(_birdSize, _birdSize);
+    position = Vector2(birdX, _screenSize.y / 2);
     debugMode = true;
     addShape(HitboxCircle());
     _subscription = _tapBloc.tapStream.listen((event) {
       /// TODO: uncomment
       if (!_collision) {
-        if ((velocityY - 2).abs() < maxVelocityY) {
-          velocityY -= 2;
+        if ((_velocityY - 2).abs() < _maxVelocityY) {
+          _velocityY -= 2;
         }
       }
     });
@@ -36,8 +36,8 @@ class Bird extends SpriteComponent with Hitbox, Collidable {
 
   void _watchBorders(double velocity) {
     final double newY = position.y + velocity;
-    if (newY > screenSize.y || newY < 0.0) {
-      velocityY = 0;
+    if (newY > _screenSize.y || newY < 0.0) {
+      _velocityY = 0;
       return;
     }
   }
@@ -65,9 +65,9 @@ class Bird extends SpriteComponent with Hitbox, Collidable {
 
   @override
   void update(double dt) {
-    velocityY = gravity < maxVelocityY ? velocityY + gravity : maxVelocityY;
-    _watchBorders(velocityY);
-    position.y += velocityY;
+    _velocityY = _gravity < _maxVelocityY ? _velocityY + _gravity : _maxVelocityY;
+    _watchBorders(_velocityY);
+    position.y += _velocityY;
     super.update(dt);
   }
 }
