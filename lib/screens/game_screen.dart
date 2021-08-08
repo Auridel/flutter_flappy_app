@@ -6,6 +6,8 @@ import 'package:flutter_flappy_app/bloc/tap_bloc.dart';
 import 'flappy_game.dart';
 
 class GameScreen extends StatefulWidget {
+  static final routeName = '/game';
+
   @override
   _GameScreenState createState() => _GameScreenState();
 }
