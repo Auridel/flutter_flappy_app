@@ -9,6 +9,4 @@ void main() async {
   await Flame.device.setLandscape();
   FlappyGame game = FlappyGame();
   runApp(GameWidget(game: game));
-
 }
-

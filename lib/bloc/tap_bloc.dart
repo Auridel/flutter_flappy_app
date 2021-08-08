@@ -1,6 +1,6 @@
 import 'dart:async';
 
-class TapBloc {
+class TapBloc{
   static TapBloc? _instance;
 
   final _tapStreamController = StreamController<void>.broadcast();
@@ -14,5 +14,11 @@ class TapBloc {
       _instance = TapBloc();
     }
     return _instance!;
+  }
+
+  static void dispose() {
+    _instance?.tapStreamSink.close();
+    _instance?._tapStreamController.close();
+    _instance = null;
   }
 }
