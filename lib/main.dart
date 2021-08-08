@@ -1,12 +1,19 @@
-import 'package:flame/flame.dart';
-import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_flappy_app/screens/flappy_game.dart';
+import 'package:flutter_flappy_app/screens/game_screen.dart';
+import 'package:flutter_flappy_app/screens/home_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Flame.device.fullScreen();
-  await Flame.device.setLandscape();
-  FlappyGame game = FlappyGame();
-  runApp(GameWidget(game: game));
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+      return MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'Flappy Bird',
+        home: HomeScreen(),
+      );
+  }
 }
