@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_flappy_app/screens/game_screen.dart';
 import 'package:flutter_flappy_app/screens/home_screen.dart';
+import 'package:flutter_flappy_app/screens/results_screen.dart';
 
 import 'helpers/custom_transition.dart';
 
@@ -27,6 +28,7 @@ class MyApp extends StatelessWidget {
         home: HomeScreen(),
         routes: {
           GameScreen.routeName: (ctx) => GameScreen(),
+          ResultsScreen.routeName: (ctx) => ResultsScreen(),
         },
       );
   }

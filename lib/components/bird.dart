@@ -22,10 +22,8 @@ class Bird extends SpriteComponent with Hitbox, Collidable {
     this.sprite = sprite;
     size = Vector2(_birdSize, _birdSize);
     position = Vector2(birdX, _screenSize.y / 2);
-    debugMode = true;
     addShape(HitboxCircle());
     _subscription = _tapBloc.tapStream.listen((event) {
-      /// TODO: uncomment
       if (!_collision) {
         if ((_velocityY - 2).abs() < _maxVelocityY) {
           _velocityY -= 2;
@@ -36,7 +34,7 @@ class Bird extends SpriteComponent with Hitbox, Collidable {
 
   void _watchBorders(double velocity) {
     final double newY = position.y + velocity;
-    if (newY > _screenSize.y || newY < 0.0) {
+    if (newY < 0.0 || newY > _screenSize.y - _birdSize / 2) {
       _velocityY = 0;
       return;
     }
@@ -51,7 +49,7 @@ class Bird extends SpriteComponent with Hitbox, Collidable {
   @override
   void onCollision(Set<Vector2> intersectionPoints, Collidable other) {
     _collision = true;
-    if(!_hasEffect) {
+    if (!_hasEffect) {
       this.addEffect(RotateEffect(
         angle: 20,
         speed: 15,
@@ -65,7 +63,8 @@ class Bird extends SpriteComponent with Hitbox, Collidable {
 
   @override
   void update(double dt) {
-    _velocityY = _gravity < _maxVelocityY ? _velocityY + _gravity : _maxVelocityY;
+    _velocityY =
+        _gravity < _maxVelocityY ? _velocityY + _gravity : _maxVelocityY;
     _watchBorders(_velocityY);
     position.y += _velocityY;
     super.update(dt);

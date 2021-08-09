@@ -1,6 +1,5 @@
 import 'package:flame/components.dart';
 import 'package:flame/geometry.dart';
-import 'package:flutter/material.dart';
 
 class PipeSprite extends SpriteComponent with Hitbox, Collidable {
   final Vector2 _screenSize;
@@ -29,8 +28,6 @@ class PipeSprite extends SpriteComponent with Hitbox, Collidable {
     this.sprite = sprite;
     this._pipeHeight = (_screenSize.y - _gap);
     size = Vector2(52.0, _pipeHeight);
-    debugMode = true;
-    debugColor = Colors.red;
     _prevXPosition = initX;
     addShape(HitboxRectangle());
     updatePipe(initX, initY);

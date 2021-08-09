@@ -7,6 +7,7 @@ import 'package:flame/gestures.dart';
 import 'package:flutter_flappy_app/bloc/tap_bloc.dart';
 import 'package:flutter_flappy_app/components/bird.dart';
 import 'package:flutter_flappy_app/components/game_score.dart';
+import 'package:flutter_flappy_app/components/ground_collidable.dart';
 import 'package:flutter_flappy_app/components/pipe_sprite.dart';
 import 'package:flutter_flappy_app/helpers/math_helpers.dart';
 
@@ -20,13 +21,15 @@ class FlappyGame extends BaseGame with TapDetector, HasCollidables {
   final double _pipeBetweenGapHorizontal = 200.0;
   final double _birdX = 150.0;
   late final GameScore _gameScore;
+  late final Function(int score) _navigateToResults;
 
   double _speed = 1.0;
   int _score = 0;
 
   int get score => _score;
 
-  FlappyGame() {
+  FlappyGame(Function(int score) navigateToResults) {
+    this._navigateToResults = navigateToResults;
     _gameScore = GameScore(this);
   }
 
@@ -45,11 +48,13 @@ class FlappyGame extends BaseGame with TapDetector, HasCollidables {
 
     await _initPipes(size);
     add(Bird(await loadSprite('bird.png'), _birdX, size, _onCollide));
+    add(GroundCollidable(size));
   }
 
   void _onCollide() {
     Future.delayed(Duration(seconds: 2), () {
       super.pauseEngine();
+      _navigateToResults(_score);
     });
   }
 

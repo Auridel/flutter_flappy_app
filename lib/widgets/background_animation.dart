@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_flappy_app/widgets/splash.dart';
 import 'dart:async';
 import 'dart:typed_data';
 import 'dart:ui' as UI;
@@ -10,9 +11,12 @@ import 'package:flutter_flappy_app/widgets/background_painter.dart';
 
 class BackgroundAnimation extends StatefulWidget {
   final Size _size;
+  final Function? _onCanvasReady;
 
-  const BackgroundAnimation({Key? key, required Size size})
+  const BackgroundAnimation(
+      {Key? key, required Size size, Function? onCanvasReady})
       : this._size = size,
+        this._onCanvasReady = onCanvasReady,
         super(key: key);
 
   @override
@@ -30,11 +34,6 @@ class _BackgroundAnimationState extends State<BackgroundAnimation>
   @override
   void initState() {
     super.initState();
-    SystemChrome.setPreferredOrientations([
-      DeviceOrientation.landscapeRight,
-      DeviceOrientation.landscapeLeft,
-    ]);
-    SystemChrome.setEnabledSystemUIOverlays([]);
     _controller =
         AnimationController(vsync: this, duration: Duration(milliseconds: 700))
           ..repeat(reverse: true);
@@ -64,6 +63,7 @@ class _BackgroundAnimationState extends State<BackgroundAnimation>
     };
     setState(() {
       _isInit = true;
+      if(widget._onCanvasReady != null )widget._onCanvasReady!();
     });
   }
 
@@ -103,11 +103,7 @@ class _BackgroundAnimationState extends State<BackgroundAnimation>
                   _images['pipeTop']!,
                   _images['pipeBottom']!),
             )
-          : Image.asset(
-              'assets/images/bg.png',
-              width: widget._size.width,
-              fit: BoxFit.cover,
-            ),
+          : Splash(),
     );
   }
 }
