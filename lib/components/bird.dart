@@ -34,7 +34,7 @@ class Bird extends SpriteComponent with Hitbox, Collidable {
 
   void _watchBorders(double velocity) {
     final double newY = position.y + velocity;
-    if (newY < 0.0 || newY > _screenSize.y - _birdSize / 2) {
+    if (newY < 0.0 || newY > _screenSize.y) {
       _velocityY = 0;
       return;
     }

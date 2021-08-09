@@ -30,6 +30,8 @@ dependencies:
   cupertino_icons: ^1.0.2
   flame: ^1.0.0-releasecandidate.11
   image: ^3.0.2
+  flutter_launcher_icons: ^0.9.1
+#  flutter_native_splash: ^1.2.1
 
 dev_dependencies:
   flutter_test:
