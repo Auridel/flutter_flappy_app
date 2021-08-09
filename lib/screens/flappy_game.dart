@@ -75,7 +75,6 @@ class FlappyGame extends BaseGame with TapDetector, HasCollidables {
     final int pipesCount = (screenSize.x / _pipeBetweenGapHorizontal).round();
     final pipesInitY =
         List.generate(pipesCount, (index) => generateRandomPipeY(screenSize.y));
-    print(pipesInitY);
     _pipes = List.generate(pipesCount, (index) {
       return {
         EPipePosition.Top: PipeSprite(
@@ -118,7 +117,6 @@ class FlappyGame extends BaseGame with TapDetector, HasCollidables {
 
   @override
   void onResize(Vector2 size) {
-    print(size);
     bg.size = size;
     bg.position = Vector2(0.0, 0.0);
     bg2.size = size;
