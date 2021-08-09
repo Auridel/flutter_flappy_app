@@ -60,6 +60,13 @@ class FlappyGame extends BaseGame with TapDetector, HasCollidables {
 
   void _addScore() {
     _score += 1;
+    if (_score % 10 == 0 && _score < 100) {
+      _increaseSpeed();
+    }
+  }
+
+  void _increaseSpeed() {
+    _speed += 0.1;
   }
 
   Future<void> _initPipes(Vector2 screenSize) async {
@@ -76,7 +83,7 @@ class FlappyGame extends BaseGame with TapDetector, HasCollidables {
             screenSize,
             true,
             pipesInitY[index],
-            (index + 1) * _pipeBetweenGapHorizontal + screenSize.x,
+            (index + 1) * _pipeBetweenGapHorizontal + screenSize.x / 2,
             index,
             _requestUpdate,
             _birdX,
@@ -86,7 +93,7 @@ class FlappyGame extends BaseGame with TapDetector, HasCollidables {
             screenSize,
             false,
             pipesInitY[index],
-            (index + 1) * _pipeBetweenGapHorizontal + screenSize.x,
+            (index + 1) * _pipeBetweenGapHorizontal + screenSize.x / 2,
             index,
             _requestUpdate,
             _birdX,
